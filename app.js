@@ -5,6 +5,10 @@
         .module('authApp', ['auth0', 'angular-storage', 'angular-jwt', 'ngMaterial', 'ui.router'])
         .config(function($provide, authProvider, $urlRouterProvider, $stateProvider, $httpProvider, jwtInterceptorProvider) {
 
+            authProvider.init({
+                domain: 'shafaiatul.auth0.com',
+                clientID: 'yyHwCjUyKxjqi58SeXHJaVb6eHVNqwp9'
+            });
 
             $urlRouterProvider.otherwise('/home');
 
