@@ -28,7 +28,26 @@
                     controller: 'profileController as user'
                 });
 
-            $httpProvider.interceptors.push('jwtInterceptor');
+                //if the token expires and the user get 401 status I will send the user to the home page removing the profile and token
+                function redirect ($q, $injector, auth, store, $location) {
+                    return {
+                        responseError: function (rejection){
+                            if(rejection.status === 401) {
+                                auth.signout();
+                                store.remove('profile');
+                                store.remove('id_token');
+                                $location.path('/home');
+                            }
+                            //this function will return a rejection from 'q'
+                            return $q.reject(rejection);
+                        }
+                    };
+                }
+                //to let the Angular know about this http interceptor (401 status), lets create a quick factory using $provide service
+                $provide.factory('redirect', redirect);
+                $httpProvider.interceptors.push('redirect');
+
+                $httpProvider.interceptors.push('jwtInterceptor');
         })
         .run(function($rootScope, auth, store, jwtHelper, $location) {
             $rootScope.$on('$locationChangeStart', function() {
