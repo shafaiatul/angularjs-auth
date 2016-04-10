@@ -10,6 +10,11 @@
                 clientID: 'yyHwCjUyKxjqi58SeXHJaVb6eHVNqwp9'
             });
 
+            //reguest for token
+            jwtInterceptorProvider.tokenGetter = function(store) { //return the JWT from local storage
+                return store.get('id_token'); //return that token and give it to the jwtInterceptorProvider to attach with the authorization header of the request
+            };
+
             $urlRouterProvider.otherwise('/home');
 
             $stateProvider
@@ -22,5 +27,7 @@
                     templateUrl: 'components/profile/profile.tpl.html',
                     controller: 'profileController as user'
                 });
+
+            $httpProvider.interceptors.push('jwtInterceptor');
         });
 })();
